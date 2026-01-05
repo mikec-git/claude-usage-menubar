@@ -5,7 +5,7 @@ interface Props {
   data: UsageData;
 }
 
-export default function MonthlySummary({ data }: Props) {
+export default function WeeklySummary({ data }: Props) {
   const totalTokens =
     data.totalTokens.inputTokens +
     data.totalTokens.outputTokens +
@@ -15,7 +15,7 @@ export default function MonthlySummary({ data }: Props) {
   return (
     <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3">
       <div className="text-xs text-purple-600 dark:text-purple-400 font-medium mb-1">
-        This Month
+        This Week
       </div>
       <div className="text-xl font-bold text-purple-700 dark:text-purple-300">
         {formatCurrency(data.totalCostUsd)}

@@ -11,8 +11,9 @@ export function useUsageData() {
   const refresh = useCallback(async () => {
     try {
       setLoading(true);
-      const [today, month, windows, sessions] = await Promise.all([
+      const [today, week, month, windows, sessions] = await Promise.all([
         invoke<UsageData>("get_usage_data", { timeRange: "today" }),
+        invoke<UsageData>("get_usage_data", { timeRange: "week" }),
         invoke<UsageData>("get_usage_data", { timeRange: "month" }),
         invoke<BillingWindow[]>("get_billing_windows"),
         invoke<SessionSummary[]>("get_session_breakdown_cmd"),
@@ -20,6 +21,7 @@ export function useUsageData() {
 
       setData({
         today,
+        week,
         month,
         billingWindows: windows,
         sessions,

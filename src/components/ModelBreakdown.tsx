@@ -1,16 +1,16 @@
+import { useState } from "react";
 import type { ModelUsage } from "../lib/types";
 import { formatCurrency, formatTokens, getModelDisplayName } from "../lib/formatters";
 
+type TimeRange = "today" | "week";
+
 interface Props {
-  models: ModelUsage[];
+  todayModels: ModelUsage[];
+  weekModels: ModelUsage[];
 }
 
-export default function ModelBreakdown({ models }: Props) {
-  if (models.length === 0) {
-    return null;
-  }
-
-  const sortedModels = [...models]
+function filterAndSortModels(models: ModelUsage[]): ModelUsage[] {
+  return [...models]
     .filter((model) => {
       const totalTokens =
         model.inputTokens +
@@ -20,15 +20,48 @@ export default function ModelBreakdown({ models }: Props) {
       return totalTokens > 0;
     })
     .sort((a, b) => b.costUsd - a.costUsd);
+}
 
-  if (sortedModels.length === 0) {
+export default function ModelBreakdown({ todayModels, weekModels }: Props) {
+  const [timeRange, setTimeRange] = useState<TimeRange>("today");
+
+  const todaySorted = filterAndSortModels(todayModels);
+  const weekSorted = filterAndSortModels(weekModels);
+
+  if (todaySorted.length === 0 && weekSorted.length === 0) {
     return null;
   }
 
+  const sortedModels = timeRange === "today" ? todaySorted : weekSorted;
+
   return (
     <div className="bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-3">
-      <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium mb-2">
-        Model Breakdown (Today)
+      <div className="flex items-center justify-between mb-2">
+        <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
+          Model Breakdown
+        </div>
+        <div className="flex gap-1 text-xs">
+          <button
+            onClick={() => setTimeRange("today")}
+            className={`px-2 py-0.5 rounded transition-colors ${
+              timeRange === "today"
+                ? "bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
+            }`}
+          >
+            Today
+          </button>
+          <button
+            onClick={() => setTimeRange("week")}
+            className={`px-2 py-0.5 rounded transition-colors ${
+              timeRange === "week"
+                ? "bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
+            }`}
+          >
+            This Week
+          </button>
+        </div>
       </div>
       <div className="space-y-2">
         {sortedModels.map((model) => {

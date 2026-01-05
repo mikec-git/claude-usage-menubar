@@ -39,6 +39,7 @@ export interface SessionSummary {
 
 export interface DashboardData {
   today: UsageData;
+  week: UsageData;
   month: UsageData;
   billingWindows: BillingWindow[];
   sessions: SessionSummary[];

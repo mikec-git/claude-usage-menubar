@@ -1,7 +1,7 @@
 import { useUsageData } from "../hooks/useUsageData";
 import { useAutoRefresh } from "../hooks/useAutoRefresh";
 import DailySummary from "./DailySummary";
-import MonthlySummary from "./MonthlySummary";
+import WeeklySummary from "./WeeklySummary";
 import ModelBreakdown from "./ModelBreakdown";
 import BillingWindow from "./BillingWindow";
 import SessionList from "./SessionList";
@@ -58,14 +58,17 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-2 gap-2">
         <DailySummary data={data.today} />
-        <MonthlySummary data={data.month} />
+        <WeeklySummary data={data.week} />
       </div>
 
       {data.billingWindows.length > 0 && (
         <BillingWindow windows={data.billingWindows} />
       )}
 
-      <ModelBreakdown models={data.today.modelBreakdown} />
+      <ModelBreakdown
+        todayModels={data.today.modelBreakdown}
+        weekModels={data.week.modelBreakdown}
+      />
 
       {data.sessions.length > 0 && (
         <SessionList sessions={data.sessions.slice(0, 5)} />
