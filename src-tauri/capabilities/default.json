@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schemas.tauri.app/config/2/capability",
+  "identifier": "default",
+  "description": "Default capabilities for the dashboard window",
+  "windows": ["dashboard"],
+  "permissions": [
+    "core:default",
+    "core:event:default",
+    "core:event:allow-emit",
+    "core:event:allow-listen",
+    "positioner:default",
+    "positioner:allow-move-window"
+  ]
+}
