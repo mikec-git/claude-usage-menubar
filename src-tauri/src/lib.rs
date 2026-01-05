@@ -78,6 +78,11 @@ pub fn run() {
             commands::get_billing_windows,
             commands::get_session_breakdown_cmd,
         ])
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::Focused(false) = event {
+                let _ = window.hide();
+            }
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

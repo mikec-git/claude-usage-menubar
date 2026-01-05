@@ -8,6 +8,7 @@
     "core:event:default",
     "core:event:allow-emit",
     "core:event:allow-listen",
+    "core:window:allow-hide",
     "positioner:default",
     "positioner:allow-move-window"
   ]
