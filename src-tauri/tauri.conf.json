@@ -27,12 +27,6 @@
         "shadow": true
       }
     ],
-    "trayIcon": {
-      "id": "main",
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true,
-      "menuOnLeftClick": false
-    },
     "security": {
       "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'"
     }

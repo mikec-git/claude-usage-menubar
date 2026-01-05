@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" width="22" height="22">
+  <!--
+    Apex Stack Icon
+    Modern geometric design for Claude Usage menu bar app
+    Stacked angular chevrons suggesting ascending metrics
+  -->
+
+  <!-- Bottom chevron - widest -->
+  <path
+    d="M2,18 L11,12 L20,18 L20,20 L11,14 L2,20 Z"
+    fill="black"
+  />
+
+  <!-- Middle chevron -->
+  <path
+    d="M4,12 L11,7 L18,12 L18,14 L11,9 L4,14 Z"
+    fill="black"
+  />
+
+  <!-- Top chevron - smallest, peak -->
+  <path
+    d="M6,6 L11,2 L16,6 L16,8 L11,4 L6,8 Z"
+    fill="black"
+  />
+
+</svg>

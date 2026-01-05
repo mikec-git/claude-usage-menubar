@@ -3,11 +3,20 @@ mod parser;
 mod pricing;
 
 use tauri::{
+    image::Image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     ActivationPolicy, Emitter, Manager,
 };
 use tauri_plugin_positioner::{Position, WindowExt};
+
+fn load_icon() -> Image<'static> {
+    let png_data = include_bytes!("../icons/icon.png");
+    let img = image::load_from_memory(png_data).expect("failed to load icon");
+    let rgba = img.to_rgba8();
+    let (width, height) = rgba.dimensions();
+    Image::new_owned(rgba.into_raw(), width, height)
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -24,7 +33,8 @@ pub fn run() {
             let menu = Menu::with_items(app, &[&refresh_i, &quit_i])?;
 
             let _tray = TrayIconBuilder::new()
-                .icon(app.default_window_icon().unwrap().clone())
+                .icon(load_icon())
+                .icon_as_template(true)
                 .menu(&menu)
                 .show_menu_on_left_click(false)
                 .on_menu_event(|app, event| match event.id.as_ref() {
