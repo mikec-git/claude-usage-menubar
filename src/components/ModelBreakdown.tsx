@@ -10,7 +10,20 @@ export default function ModelBreakdown({ models }: Props) {
     return null;
   }
 
-  const sortedModels = [...models].sort((a, b) => b.costUsd - a.costUsd);
+  const sortedModels = [...models]
+    .filter((model) => {
+      const totalTokens =
+        model.inputTokens +
+        model.outputTokens +
+        model.cacheCreationInputTokens +
+        model.cacheReadInputTokens;
+      return totalTokens > 0;
+    })
+    .sort((a, b) => b.costUsd - a.costUsd);
+
+  if (sortedModels.length === 0) {
+    return null;
+  }
 
   return (
     <div className="bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-3">
