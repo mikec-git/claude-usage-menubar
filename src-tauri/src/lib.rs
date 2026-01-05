@@ -1,12 +1,16 @@
+mod cache;
 mod commands;
 mod parser;
 mod pricing;
+mod watcher;
+
+use cache::EntryCache;
 
 use tauri::{
     image::Image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
-    ActivationPolicy, Emitter, Manager,
+    ActivationPolicy, Manager,
 };
 use tauri_plugin_positioner::{Position, WindowExt};
 
@@ -22,15 +26,21 @@ fn load_icon() -> Image<'static> {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_positioner::init())
+        .manage(EntryCache::new())
         .setup(|app| {
             #[cfg(target_os = "macos")]
             app.set_activation_policy(ActivationPolicy::Accessory);
 
-            let refresh_i =
-                MenuItem::with_id(app, "refresh", "Refresh Now", true, None::<&str>)?;
+            // Initialize cache before starting watcher
+            let cache = app.state::<EntryCache>();
+            cache.initialize();
+
+            // Start file watcher for real-time updates
+            watcher::start_file_watcher(app.handle().clone());
+
             let quit_i = MenuItem::with_id(app, "quit", "Quit Claude Usage", true, None::<&str>)?;
 
-            let menu = Menu::with_items(app, &[&refresh_i, &quit_i])?;
+            let menu = Menu::with_items(app, &[&quit_i])?;
 
             let _tray = TrayIconBuilder::new()
                 .icon(load_icon())
@@ -40,11 +50,6 @@ pub fn run() {
                 .on_menu_event(|app, event| match event.id.as_ref() {
                     "quit" => {
                         app.exit(0);
-                    }
-                    "refresh" => {
-                        if let Some(window) = app.get_webview_window("dashboard") {
-                            let _ = window.emit("refresh-data", ());
-                        }
                     }
                     _ => {}
                 })

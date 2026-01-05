@@ -1,5 +1,4 @@
 import { useUsageData } from "../hooks/useUsageData";
-import { useAutoRefresh } from "../hooks/useAutoRefresh";
 import DailySummary from "./DailySummary";
 import WeeklySummary from "./WeeklySummary";
 import ModelBreakdown from "./ModelBreakdown";
@@ -8,8 +7,6 @@ import SessionList from "./SessionList";
 
 export default function Dashboard() {
   const { data, loading, error, refresh } = useUsageData();
-
-  useAutoRefresh(refresh, 30000);
 
   if (loading && !data) {
     return (
@@ -47,13 +44,11 @@ export default function Dashboard() {
         <h1 className="text-base font-semibold text-neutral-800 dark:text-neutral-100">
           Claude Usage
         </h1>
-        <button
-          onClick={refresh}
-          className="text-xs text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
-          title="Refresh"
-        >
-          {loading ? "Updating..." : "↻ Refresh"}
-        </button>
+        {loading && (
+          <span className="text-xs text-neutral-400 dark:text-neutral-500">
+            Updating...
+          </span>
+        )}
       </header>
 
       <div className="grid grid-cols-2 gap-2">

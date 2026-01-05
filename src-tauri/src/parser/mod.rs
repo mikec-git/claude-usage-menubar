@@ -5,7 +5,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
 
-use chrono::{DateTime, Datelike, Duration, Local, NaiveDate, Utc};
+use chrono::{DateTime, Duration, Utc};
 use walkdir::WalkDir;
 
 use crate::pricing::calculate_cost;
@@ -70,39 +70,6 @@ pub fn parse_jsonl_file(path: &PathBuf) -> Vec<LogEntry> {
     entries
 }
 
-pub fn load_all_entries(time_range: &str) -> Vec<LogEntry> {
-    let paths = get_claude_paths();
-    let files = find_jsonl_files(&paths);
-
-    let now = Local::now();
-    let filter_date = match time_range {
-        "today" => now.date_naive(),
-        "week" => (now - Duration::days(7)).date_naive(),
-        "month" => NaiveDate::from_ymd_opt(now.year(), now.month(), 1).unwrap_or(now.date_naive()),
-        _ => NaiveDate::from_ymd_opt(1970, 1, 1).unwrap(),
-    };
-
-    let mut all_entries = Vec::new();
-
-    for file in files {
-        let entries = parse_jsonl_file(&file);
-        for entry in entries {
-            if let Ok(dt) = DateTime::parse_from_rfc3339(&entry.timestamp) {
-                let entry_date = dt.with_timezone(&Local).date_naive();
-                if time_range == "today" {
-                    if entry_date == filter_date {
-                        all_entries.push(entry);
-                    }
-                } else if entry_date >= filter_date {
-                    all_entries.push(entry);
-                }
-            }
-        }
-    }
-
-    all_entries.sort_by(|a, b| a.timestamp.cmp(&b.timestamp));
-    all_entries
-}
 
 pub fn aggregate_usage(entries: &[LogEntry]) -> UsageData {
     let mut total_cost = 0.0;

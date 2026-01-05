@@ -38,12 +38,13 @@ export function useUsageData() {
   useEffect(() => {
     refresh();
 
-    const unlisten = listen("refresh-data", () => {
+    // Listen for file changes from the backend watcher (real-time updates)
+    const unlistenFilesChanged = listen("files-changed", () => {
       refresh();
     });
 
     return () => {
-      unlisten.then((fn) => fn());
+      unlistenFilesChanged.then((fn) => fn());
     };
   }, [refresh]);
 
