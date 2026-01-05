@@ -43,3 +43,11 @@ export interface DashboardData {
   billingWindows: BillingWindow[];
   sessions: SessionSummary[];
 }
+
+export type PlanType = "pro" | "max100" | "max200";
+
+export const PLAN_CONFIG: Record<PlanType, { name: string; tokenLimit: number }> = {
+  pro: { name: "Pro ($20)", tokenLimit: 45_000_000 },
+  max100: { name: "Max ($100)", tokenLimit: 225_000_000 },
+  max200: { name: "Max ($200)", tokenLimit: 900_000_000 },
+};

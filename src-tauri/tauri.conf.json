@@ -16,7 +16,7 @@
       {
         "label": "dashboard",
         "title": "Claude Usage",
-        "width": 380,
+        "width": 285,
         "height": 520,
         "resizable": false,
         "decorations": false,
